@@ -607,24 +607,16 @@
       @media (max-width: 720px) {
         html, body { overflow-x: hidden; }
         .shell { width: 100%; padding: 12px; gap: 12px; }
-        .top { align-items: flex-start; flex-direction: column; }
-        .top > div:first-child { padding-left: 56px; }
-        .top > div:first-child::before { width: 42px; height: 42px; }
-        h1 { font-size: 22px; }
-        .top .muted { max-width: 280px; font-size: 12px; }
-        .actions { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .actions .btn { min-height: 42px; padding: 0 10px; font-size: 12px; }
-        .actions .btn-primary { grid-column: 1 / -1; }
+        .top { min-height: 0; align-items: center; flex-direction: row; flex-wrap: wrap; gap: 8px; }
+        .top > div:first-child { width: 100%; min-height: 34px; display: flex; align-items: center; padding-left: 44px; }
+        .top > div:first-child::before { top: 0; width: 34px; height: 34px; font-size: 17px; box-shadow: none; }
+        h1 { overflow: hidden; font-size: 18px; line-height: 1.1; letter-spacing: -.35px; white-space: nowrap; text-overflow: ellipsis; }
+        .top .muted { display: none; }
+        .actions { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+        .actions .btn,
+        .actions .btn-primary { grid-column: auto; min-width: 0; min-height: 32px; padding: 0 7px; border-radius: 8px; font-size: 10.5px; box-shadow: none; }
 
-        .summary {
-          display: flex;
-          gap: 10px;
-          width: calc(100vw - 24px);
-          overflow-x: auto;
-          scroll-snap-type: x mandatory;
-          scrollbar-width: none;
-          padding-bottom: 2px;
-        }
+        .summary { display: none; }
         .summary::-webkit-scrollbar { display: none; }
         .summary div {
           flex: 0 0 165px;
@@ -637,7 +629,7 @@
         #calendar {
           width: calc(100vw - 24px);
           min-height: 0;
-          padding: 58px 10px 18px;
+          padding: 48px 10px 14px;
           overflow-x: auto;
           scroll-snap-type: x mandatory;
           scroll-padding-inline: 10px;
@@ -645,8 +637,8 @@
           overscroll-behavior-inline: contain;
         }
         #calendar::-webkit-scrollbar { display: none; }
-        #calendar::before { left: 16px; top: 19px; }
-        #calendar::after { content: "Свайп по дням →"; right: 14px; top: 14px; }
+        #calendar::before { left: 14px; top: 15px; font-size: 14px; }
+        #calendar::after { content: "Свайп →"; right: 10px; top: 10px; padding: 6px 8px; font-size: 10px; }
         .grid {
           display: flex;
           gap: 10px;
@@ -713,7 +705,7 @@
         </div>
         <div class="actions">
           <button class="btn" id="btnToday">Сегодня</button>
-          <button class="btn" id="btnCycle">Открыть настройки цикла</button>
+          <button class="btn" id="btnCycle">Настройки</button>
           <button class="btn btn-primary" id="btnShowAll">Календарь</button>
         </div>
       </header>
