@@ -988,7 +988,8 @@
       const el = (id) => document.getElementById(id);
 
       function getDateInput(date) {
-        return date.toISOString().slice(0, 10);
+        const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+        return localDate.toISOString().slice(0, 10);
       }
 
       function toMinutes(t) {
@@ -1420,7 +1421,7 @@
 
       function renderSummary() {
         const days = planByDate();
-        const doneNow = days.filter((d) => d.date === new Date().toISOString().slice(0, 10)).shift();
+        const doneNow = days.filter((d) => d.date === getDateInput(new Date())).shift();
         const completedWork = days.reduce((acc, d) => acc + dayMetrics(d).done, 0);
         const all = days.reduce((acc, d) => acc + dayMetrics(d).total, 0);
         const metrics = cycleMetrics(state.cycles[currentCycle.id]);
@@ -1436,7 +1437,7 @@
         const selected = doneNow ? doneNow : state.cycles[currentCycle.id].days[0];
         const workNow = selected ? dayMetrics(selected).doneMinutes : 0;
         const remain = Math.max(0, 360 - dayMetrics(selected).plannedMinutes);
-        const blocks = getCurrentBlockLabel(selected?.date || new Date().toISOString().slice(0, 10));
+        const blocks = getCurrentBlockLabel(selected?.date || getDateInput(new Date()));
 
         metricsLine.innerHTML = `
           <div class="big-box">
@@ -1543,12 +1544,20 @@
         grid.innerHTML = "";
         days.forEach((day) => {
           const card = buildDayCard(day);
+          card.dataset.date = day.date;
           if (selectedDate && selectedDate === day.date) card.style.outline = "2px solid var(--blue)";
           if (selectedDate && day.date !== selectedDate) {
             const d = new Date(day.date);
             if (d.getDay() !== new Date().getDay()) card.style.display = "";
           }
           grid.appendChild(card);
+        });
+
+        requestAnimationFrame(() => {
+          const selectedCard = Array.from(grid.children).find((card) => card.dataset.date === selectedDate);
+          if (selectedCard && window.matchMedia("(max-width: 720px)").matches) {
+            selectedCard.scrollIntoView({ behavior: "instant", block: "nearest", inline: "center" });
+          }
         });
 
         if (!selectedDate) selectedDate = days[0]?.date || getDateInput(new Date());
